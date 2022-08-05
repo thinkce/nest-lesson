@@ -1,12 +1,9 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -14,11 +11,14 @@ model User {
   id        Int      @id @default(autoincrement())
   createAt  DateTime @default(now())
   updatedAt DateTime @updatedAt
-  email     String
+  email     String   @unique
   password  String
 
   firstName String?
   lastName  String?
+
+  bookmarks Bookmark[]
+  @@map("users")
 }
 
 model Bookmark {
@@ -28,4 +28,9 @@ model Bookmark {
   title       String
   discription String?
   link        String
+
+  userId Int
+  user User @relation(fields: [userId], references: [id])
+
+  @@map(" bookmarks")
 }
